@@ -10,7 +10,7 @@ body {
     color: #333;
 }
 
-.container {
+.container, .container-prod {
     width: 90%;
     max-width: 1200px;
     margin: 20px auto;
