@@ -4,11 +4,10 @@ const mongoose = require('mongoose');
 
 
 const produtoSchema = new mongoose.Schema({
-    _id: { type: Number },
-    nome: { type: String, required: true },
+    nome: { type: String, required: false },
     categoria: { type: String, required: false, default: '' },
     quantidade: { type: String, required: false, default: '' },
-    valor: { type: Number, required: false, default: '' },
+    valor: { type: String, required: false, default: '' },
     criadoEm: { type: Date, default: Date.now },
 });
 
@@ -16,61 +15,58 @@ const ProdutoModel = mongoose.model('Produto', produtoSchema);
 
 class Produto{
     constructor(body){
-        this.body=body
-        this.errors=[]
+        this.cleanUp()
+        this.fetch(body)
     }
 
     async criarProduto(req, res) {
+        this.valida()
         if(this.errors.length > 0) return
-        //await this.productExists()
-    
-       
-            const { nome, categoria, valor, quantidade } = req.body;
-    
-            // Gerar um ID sequencial para o novo produto
-            const idProduto = await gerarIdUnico('produto');
-    
-            // Criar o produto com o ID gerado
-            const novoProduto = new ProdutoModel({
-                _id: idProduto,
-                nome,
-                valor,
-                categoria,
-                quantidade
-            });
+        await ProdutoModel.create(
+            {nome:this.nome,
+            categoria: this.categoria,
+            quantidade: this.quantidade,
+            valor: this.valor}
+        );
+    }
+
+    valida(){       
+        if(!this.valor || !validator.isDecimal(this.valor)) 
+            this.errors.push('Valor precisa ser um número decimal válido!')
+        else
+            if(this.valor<0) this.errors.push('Valor precisa ser maior que zero')
+
+        if (!validator.isAlphanumeric(this.nome)) this.errors.push('Nome inválido!')
+
+        if(!this.quantidade || !validator.isInt(this.quantidade)) 
+            this.errors.push('Quantidade precisa ser inteira!')
+        else    
+            if(this.quantidade<0) this.errors.push('Quantidade precisa ser maior que 0')
+
+        if(this.errors.length>0){
+            throw {
+                message: 'erro na validação',
+                errors: this.errors
+            }
         }
-    
-            //await novoProduto.save();
-            
+    } 
+
+    fetch(produto){
+        this.nome = produto.nome
+        this.valor = produto.valor
+        this.categoria = produto.categoria
+        this.quantidade = produto.quantidade     
         
-    
-
-    //async productExists(){
-
-
-    //}
-
-
+    }
 
     cleanUp(){
-        this.body()={
-            nome: this.body.nome,
-            valor: this.body.valor,
-            quantidade: this.body.quantidade,
+        this.nome = ''
+        this.valor = 0
+        this.quantidade = 0
 
-        }
+        this.errors=[]
+        
     }
-
-    valida(){
-        this.cleanUp()
-        if(!validator.isDecimal(this.body.valor)) this.errors.push('Valor precisa ser um número decimal válido!')
-        if(this.valor<0) this.errors.push('Valor precisa ser maior que zero')
-        if (!validator.isAlphanumeric(this.nome)) this.errors.push('Nome inválido!')
-        if(!validator.isInt(this.quantidade)) this.errors.push('Quantidade precisa ser inteira!')
-        if(this.quantidade<0) this.errors.push('Quantidade precisa ser maior que 0')
-    }
-
-
 
 }
 module.exports = Produto;

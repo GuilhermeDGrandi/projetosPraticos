@@ -10,7 +10,8 @@ route.get('/', homeController.paginaInicial)
 
 //rota produtos
 route.get('/produto/index', produtosController.index)
-route.get('/produto/criar', produtosController.new)
+route.get('/produto/criar', produtosController.show)
+route.post('/produto/criar', produtosController.register)
 
 module.exports = route
 
