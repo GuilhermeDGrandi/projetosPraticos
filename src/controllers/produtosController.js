@@ -1,7 +1,8 @@
 const Produto = require('../models/produtoModel')
 
-exports.index = (req, res)=>{
-    return res.render('produtosView')
+exports.index = async (req, res)=>{
+    const produto = await Produto.buscaProdutos()
+    return res.render('produtosView', {produto})
 }
 
 exports.show = (req, res)=>{
@@ -18,6 +19,17 @@ exports.register = async function (req, res){
     }catch(e){
         console.log(e)
     }    
+}
+
+exports.editIndex = async function(req, res) {
+    Produto.Edit(req.params.id, req.body)
+};
+
+exports.edit = async function (req, res){
+    const produto = await Produto.buscaProdutosPorId(req.params.id)
+    
+    res.render('edit', {produto}) 
+    
 }
 
 

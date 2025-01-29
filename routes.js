@@ -13,6 +13,9 @@ route.get('/produto/index', produtosController.index)
 route.get('/produto/criar', produtosController.show)
 route.post('/produto/criar', produtosController.register)
 
+route.get('/produto/edit/:id', produtosController.edit)
+route.post('/produto/edit/:id', produtosController.editIndex)
+
 module.exports = route
 
 
