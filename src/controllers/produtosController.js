@@ -15,6 +15,7 @@ exports.register = async function (req, res){
         const produto = new Produto(req.body)
         await produto.criarProduto()
         req.flash('success', 'Produto cadastrado com sucesso!')
+        res.redirect('/produto/index')
               
     }catch(e){
         console.log(e)
@@ -23,6 +24,7 @@ exports.register = async function (req, res){
 
 exports.editIndex = async function(req, res) {
     Produto.Edit(req.params.id, req.body)
+    res.redirect('/produto/index')
 };
 
 exports.edit = async function (req, res){
@@ -31,6 +33,16 @@ exports.edit = async function (req, res){
     res.render('edit', {produto}) 
     
 }
+
+exports.delete = async function(req, res) {
+    console.log(req.params.id)
+  
+    await Produto.delete(req.params.id);
+    
+  
+    req.flash('success', 'produto apagado com sucesso.');
+    res.redirect('/produto/index')
+  };
 
 
 

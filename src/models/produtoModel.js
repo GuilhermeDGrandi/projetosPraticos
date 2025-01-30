@@ -31,12 +31,12 @@ class Produto {
     }
 
     valida() {
-        if (!this.valor || !validator.isDecimal(this.valor))
+        if (!this.valor || !validator.isDecimal(this.valor, { locale: 'pt-BR' }))
             this.errors.push('Valor precisa ser um número decimal válido!')
         else
             if (this.valor < 0) this.errors.push('Valor precisa ser maior que zero')
 
-        if (!validator.isAlphanumeric(this.nome)) this.errors.push('Nome inválido!')
+        if (!validator.isWhitelisted(this.nome, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ')) this.errors.push('Nome inválido!')
 
         if (!this.quantidade || !validator.isInt(this.quantidade))
             this.errors.push('Quantidade precisa ser inteira!')
@@ -88,16 +88,10 @@ Produto.Edit = async function (id, body) {
     console.log(body)
     const produto = new Produto(body)
     produto.valida()
-    await ProdutoModel.findByIdAndUpdate(id,
-        {
-            nome: this.nome,
-            categoria: this.categoria,
-            quantidade: this.quantidade,
-            valor: this.valor
-        }, { new: true })
-
-    console.log('cheguei')
-    //redirecionar
+    await ProdutoModel.findByIdAndUpdate(id, produto, { new: true })
+}
+Produto.delete = async function (id) {
+    await ProdutoModel.findByIdAndDelete(id)
 }
 
 module.exports = Produto;

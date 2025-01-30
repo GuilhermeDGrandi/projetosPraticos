@@ -16,6 +16,7 @@ route.post('/produto/criar', produtosController.register)
 route.get('/produto/edit/:id', produtosController.edit)
 route.post('/produto/edit/:id', produtosController.editIndex)
 
+route.get('/produto/delete/:id', produtosController.delete)
 module.exports = route
 
 

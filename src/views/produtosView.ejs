@@ -21,7 +21,9 @@
                   <td><%= produto.categoria %></td>
                   <td><%= produto.quantidade %></td>
                   <td><%= produto.valor %></td>
-                  <td> <a href="/produto/edit/<%= produto._id %>">Editar</a></td>
+                  <td> <a class="btn-acao" href="/produto/edit/<%= produto._id %>">Editar</a>
+                    <a class="btn-acao" href="/produto/delete/<%= produto._id %>">Excluir</a>
+                  </td>
                     <!-- <form action="/produto/edit < %= produto._id%>" method="POST" style="display: inline;">
                       <input type="hidden" name="id" value="< %= produto._id %>">
                       <button type="submit" style="all: unset; color: blue; cursor: pointer; text-decoration: underline;">
